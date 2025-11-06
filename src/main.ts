@@ -1,7 +1,7 @@
 import { startServer } from './server.js';
 import { request, requestSession } from './api.js';
 
-startServer(3000);
+startServer(Number(process.env.PORT ?? 3000));
 
 (async () => {
     request.auth = 1;

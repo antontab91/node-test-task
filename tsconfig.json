@@ -4,7 +4,7 @@
         "module": "ES2022",
         "moduleResolution": "Bundler",
         "outDir": "dist",
-        "rootDir": ".", // 👈 исправлено: теперь включает src и test
+        "rootDir": "src",
         "strict": true,
         "resolveJsonModule": true,
         "esModuleInterop": true,

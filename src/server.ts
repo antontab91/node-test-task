@@ -1,6 +1,5 @@
 import { IncomingMessage, ServerResponse, createServer } from 'node:http';
 import debug from 'debug';
-
 import {
     HTTP_STATUS,
     HANG_PROBABILITY,
@@ -12,11 +11,7 @@ const log = debug('server');
 const usersById = new Map<number, Pet[]>();
 let nextPetId = 1;
 
-function sendJson({
-    response,
-    data,
-    code = HTTP_STATUS.OK,
-}: SendJsonArgs): void {
+function sendJson({ response, data, code = HTTP_STATUS.OK }: SendJsonArgs) {
     response.statusCode = code;
     response.setHeader('Content-Type', 'application/json');
     response.end(JSON.stringify(data));
@@ -26,16 +21,16 @@ function sendText({
     response,
     text,
     code = HTTP_STATUS.BAD_REQUEST,
-}: SendTextArgs): void {
+}: SendTextArgs) {
     response.statusCode = code;
     response.end(text);
 }
 
-function notFound(response: ServerResponse): void {
+function notFound(response: ServerResponse) {
     sendText({ response, text: 'Not found', code: HTTP_STATUS.NOT_FOUND });
 }
 
-function badRequest(response: ServerResponse, text = 'Bad JSON'): void {
+function badRequest(response: ServerResponse, text = 'Bad JSON') {
     sendText({ response, text, code: HTTP_STATUS.BAD_REQUEST });
 }
 
@@ -56,7 +51,7 @@ async function handlePetsRoute(
     req: IncomingMessage,
     res: ServerResponse,
     userId: number
-): Promise<void> {
+) {
     if (!usersById.has(userId)) usersById.set(userId, []);
     const pets = usersById.get(userId)!;
 
@@ -105,7 +100,6 @@ const server = createServer(async (req, res) => {
     if (Math.random() < HANG_PROBABILITY) {
         await new Promise(() => {}); // зависание без ответа
     }
-
     if (!req.url || !req.method) {
         res.end();
         return;
@@ -124,7 +118,6 @@ const server = createServer(async (req, res) => {
     log('%s %s (user %d)', req.method, req.url, userId);
 
     const { pathname } = new URL(req.url, 'http://localhost');
-
     if (pathname.startsWith('/pets') || pathname === '/pet') {
         await handlePetsRoute(req, res, userId);
         return;
@@ -134,7 +127,7 @@ const server = createServer(async (req, res) => {
 });
 
 export function startServer(port = 3000) {
-    return server.listen(port, () => log(`listening on :${port}`));
+    return server.listen(port, () => debug('server')(`listening on :${port}`));
 }
 
 export function stopServer(): Promise<void> {
