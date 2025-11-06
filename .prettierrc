@@ -1,0 +1,14 @@
+{
+    "printWidth": 80,
+    "tabWidth": 4,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "overrides": [
+        {
+            "files": ["*.config.ts", "*.config.js"],
+            "options": {
+                "printWidth": 100
+            }
+        }
+    ]
+}
